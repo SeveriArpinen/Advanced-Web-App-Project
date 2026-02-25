@@ -33,11 +33,17 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.UserDocument = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-let userSchema = new mongoose_1.Schema({
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-});
-const User = mongoose_1.default.model("User", userSchema);
-exports.User = User;
+let userDocumentSchema = new mongoose_1.Schema({
+    name: { type: String, required: true },
+    text: { type: String, required: true },
+    user: { type: mongoose_1.Schema.Types.ObjectId, required: true },
+    sharedEditWith: [{ type: mongoose_1.Schema.Types.ObjectId }],
+    sharedViewWith: [{ type: mongoose_1.Schema.Types.ObjectId }],
+    isPublic: { type: Boolean, default: false },
+    isLocked: { type: Boolean, default: false },
+    isTrashed: { type: Boolean, default: false }
+}, { timestamps: true });
+const UserDocument = mongoose_1.default.model("UserDocument", userDocumentSchema);
+exports.UserDocument = UserDocument;

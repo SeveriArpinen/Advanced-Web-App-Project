@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
     user?: JwtPayload
 }
 

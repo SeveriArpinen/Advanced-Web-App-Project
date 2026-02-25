@@ -11,13 +11,19 @@ const app: Express = express()
 const port = 1234
 
 
-const mongoDB: string = "mongodb://localhost:27017/testdb"
+const mongoDB: string = "mongodb://localhost:27017/project"
 mongoose.connect(mongoDB)
 mongoose.Promise = Promise
 const db: Connection =mongoose.connection
 
 db.on("error", console.error.bind(console, "MongoDB connection error"))
 
+const corsOptions: CorsOptions = {
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
@@ -25,18 +31,6 @@ app.use(morgan("dev"))
 
 app.use("/api", router)
 
-if (process.env.NODE_ENV === "development") {
-    const corsOptions: CorsOptions = {
-        origin: "http://localhost:3000",
-        optionsSuccessStatus: 200
-    }
-    app.use(cors(corsOptions))
-} else if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.resolve("../..", "client", "build")))
-    app.get("*", (req: Request, res:Response) => {
-        res.sendFile(path.resolve("../..", "client", "build", "index.html"))
-    })
-}
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
